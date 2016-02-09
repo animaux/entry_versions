@@ -5,8 +5,8 @@
 	
 	Class fieldEntry_Versions extends Field{	
 		
-		function __construct(&$parent){
-			parent::__construct($parent);
+		public function __construct(){
+			parent::__construct();
 			$this->_name = __('Entry Versions');
 			$this->_required = false;
 		}
@@ -16,7 +16,7 @@
 			
 			$author = 'frontend user';
 			if(Symphony::Engine() instanceOf Administration) {
-				$author = Administration::instance()->Author->getFullName();
+				$author = Administration::instance()->Author()->getFullName();
 			}
 			
 			return array(
