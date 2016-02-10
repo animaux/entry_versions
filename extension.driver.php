@@ -98,7 +98,6 @@
 			$entry = $context['entry'];
 			$fields = $context['fields'];
 			
-			var_dump($fields);
 			// if saved from an event, no section is passed, so resolve
 			// section object from the entry
 			if(is_null($section)) {
