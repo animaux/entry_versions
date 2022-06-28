@@ -4,19 +4,6 @@
 	
 	class extension_entry_versions extends Extension {
 		
-		public function about() {
-			return array(
-				'name'			=> 'Entry Versions',
-				'version'		=> '0.4.1',
-				'release-date'	=> '2011-04-21',
-				'author'		=> array(
-					'name'			=> 'Nick Dunn',
-					'website'		=> 'http://nick-dunn.co.uk'
-				),
-				'description' => 'Create, browse and restore entry versions.'
-			);
-		}
-		
 		public function uninstall() {
 			Symphony::Database()->query("DROP TABLE `tbl_fields_entry_versions`");
 		}
@@ -76,7 +63,7 @@
 					"Symphony.Context.add('entry_versions', " . json_encode(array('version' => $_GET['version'])) . ")",
 					array('type' => 'text/javascript')
 				), 9359350);*/
-
+        $_GET['version'] = $_GET['version'] ?? null;
 				$javaScript = "\n";
 				$javaScript.= "Symphony.Context.add('entry_versions', " . json_encode(array('version' => $_GET['version'])) . ")";
 			
@@ -113,6 +100,7 @@
 			$has_entry_versions_field = FALSE;
 			
 			// is this an update to an existing version, or create a new version?
+			$fields['entry-versions'] = $fields['entry-versions'] ?? null;
 			$is_update = ($fields['entry-versions'] != 'yes');
 			
 			// find the Entry Versions field in the section and remove its presence from
@@ -125,8 +113,8 @@
 			}
 			
 			if(!$has_entry_versions_field) return;
-			
-			$version = EntryVersionsManager::saveVersion($entry, $fields, $is_update, $entry_version_field_name);
+			// $version = EntryVersionsManager::saveVersion($entry, $fields, $is_update, $entry_version_field_name);
+			$version = EntryVersionsManager::saveVersion($entry, $fields, $is_update);
 			$context['messages'][] = array('version', 'passed', $version);
 			
 		}

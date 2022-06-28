@@ -17,8 +17,11 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="0.7" date="2022-06-28" min="2.7.10">
+		  + PHP 8.1 Compatibility (likely requires PHP 7)
+		</release>
 		<release version="0.6" date="2017-12-18" min="2.6">
-		  + PHP7 Compatibility
+		  + PHP 7 Compatibility
 		</release>
 		<release version="0.5" date="2016-09-02" min="2.6" />
 		<release version="0.4.2" date="2011-12-05" min="2.2" />

@@ -17,15 +17,19 @@ Class EntryVersionsManager {
 		}
 		
 		// max version number
-		$new_version_number = count($existing_versions['filelist']);
-
-		$new_version_number++;
-
-		//$is_update = false;
-
-		if ($is_update) $new_version_number--;
+		$existing_versions = $existing_versions ?? null;
+		$new_version_number = $new_version_number ?? null;
 		
-		if ($new_version_number == 0) $new_version_number++;
+		if (isset($existing_versions)) {
+			$new_version_number = count($existing_versions['filelist']);
+
+			$new_version_number++;
+
+			//$is_update = false;
+
+			if ($is_update) $new_version_number--;
+			if ($new_version_number == 0) $new_version_number++;
+		}
 		
 		// run custom DS to get the built XML of this entry
 		//$ds = new EntryVersionsXMLDataSource(null, false);
@@ -60,6 +64,7 @@ Class EntryVersionsManager {
 		);
 		
 		$write = General::writeFile(MANIFEST . '/versions/' . $entry->get('id') . '/' . $new_version_number . '.xml', $data);
+		// General::writeFile(MANIFEST . '/versions/' . $entry->get('id') . '/' . $new_version_number . '.dat', self::serializeEntry($entry));
 		General::writeFile(MANIFEST . '/versions/' . $entry->get('id') . '/' . $new_version_number . '.dat', self::serializeEntry($entry));
 		
 		return $new_version_number;
@@ -92,23 +97,24 @@ Class EntryVersionsManager {
 	public static function getLatestVersion($entry_id) {
 		
 		$files = General::listStructure(MANIFEST . '/versions/' . $entry_id . '/', '/.xml$/', false, 'desc');
-		if (!is_array($files['filelist'])) $files['filelist'] = array();
+		if (isset($files)) {
+			if (!is_array($files['filelist'])) $files['filelist'] = array();
+			if (count($files['filelist']) == 0) return;
 		
-		if (count($files['filelist']) == 0) return;
+			natsort($files['filelist']);
+			$files['filelist'] = array_reverse($files['filelist']);
 		
-		natsort($files['filelist']);
-		$files['filelist'] = array_reverse($files['filelist']);
+			$file = reset($files['filelist']);
 		
-		$file = reset($files['filelist']);
-		
-		$entry = new DomDocument();
-		$entry->load($file);
+			$entry = new DomDocument();
+			$entry->load($file);
 
-		return $entry;
+			return $entry;
+		}
 		
 	}
 	
-	public function serializeEntry($entry) {
+	public static function serializeEntry($entry) {
 		$entry->findDefaultData();		
 		$entry = array(
 			'id' => $entry->get('id'),
@@ -122,7 +128,7 @@ Class EntryVersionsManager {
 	}	
 	
 	// rebuild entry object from a previous version
-	public function unserializeEntry($entry_id, $version) {
+	public static function unserializeEntry($entry_id, $version) {
 		$entry = unserialize(
 			file_get_contents(MANIFEST . '/versions/' . $entry_id . '/' . $version . '.dat')
 		);

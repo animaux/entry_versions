@@ -84,16 +84,11 @@ div.field-entry_versions a.more {
 }
 
 #entry-versions-actions {
-	display: inline-block;
-	float: right;
-	vertical-align: baseline;
-	margin-right: 0.5em;
+	display: block;
+	margin: auto .5em auto 2em;
 }
 
 #entry-versions-actions input {
-	vertical-align: baseline;
 	padding: 0;
-	margin-right: 0.35em;
-	display: inline;
-	float: none;
+	margin: 0 .5em 0 0 !important;
 }
