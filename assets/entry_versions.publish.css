@@ -11,22 +11,22 @@ div.field-entry_versions span {
 }
 
 div.field-entry_versions div.frame {
-	padding: 10px;
-	background-color: #F5F5F3;
-	border: 1px solid #E4E4DE;
+	padding: 0;
+	background-color: transparent;
+	border: none;
 	overflow: auto;	
 }
 
 div.field-entry_versions ol {
+  display: table;
 	margin: 0;
-	list-style-type: disc;
+	list-style-type: none;
 	color: #aaa;
 	clear: both;
 }
 
 div.field-entry_versions li span {
 	border: none;
-	padding: 0;
 	display: inline;
 	width: auto;
 	height: auto;
@@ -40,29 +40,37 @@ div.field-entry_versions li span.date {
 }
 
 div.field-entry_versions li {
-	padding: 2px 4px 2px 0;
-	list-style-position: outside;
-	margin-left: 15px;
+  display: table-row;
+	margin: 0;
+}
+
+div.field-entry_versions li > * {
+	display: table-cell;
+	padding: .75em;
 }
 
 div.field-entry_versions ol a {
 	outline: none;
 	text-decoration: underline;
+	border-bottom-color: transparent;
 }
 
 div.field-entry_versions li.viewing {
-	color: #000;
+	color: black;
+	background: white;
+	border-radius: .5em;
 }
 
 div.field-entry_versions ol li.viewing a {
 	color: #000;
 	cursor: text;
+	font-weight: bold;
 	text-decoration: none;
 }
 
 div.field-entry_versions ol li.viewing a span.version {
 	color: #5072BF;
-	text-decoration: underline;
+	text-decoration: none;
 	cursor: pointer;
 	font-weight: normal;
 }
