@@ -5,18 +5,18 @@
 	
 	Class fieldEntry_Versions extends Field{	
 		
-		function __construct(&$parent){
-			parent::__construct($parent);
+		public function __construct(){
+			parent::__construct();
 			$this->_name = __('Entry Versions');
 			$this->_required = false;
 		}
 				
-		public function processRawFieldData($data, &$status, $simulate=false, $entry_id=null) {	
+		public function processRawFieldData($data, &$status, &$message = null, $simulate = false, $entry_id = null) {	
 			$status = self::__OK__;
 			
 			$author = 'frontend user';
 			if(Symphony::Engine() instanceOf Administration) {
-				$author = Administration::instance()->Author->getFullName();
+				$author = Administration::instance()->Author()->getFullName();
 			}
 			
 			return array(
@@ -26,7 +26,7 @@
 			);
 		}
 		
-		public function displaySettingsPanel(&$wrapper, $errors = null) {
+		public function displaySettingsPanel(XMLElement &$wrapper, $errors = null) {
 			
 			$wrapper->appendChild(new XMLElement('h4', ucwords($this->name())));
 			$wrapper->appendChild(Widget::Input('fields['.$this->get('sortorder').'][type]', $this->handle(), 'hidden'));
@@ -68,7 +68,7 @@
 			return Symphony::Database()->insert($fields, 'tbl_fields_' . $this->handle());			
 		}
 		
-		function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL){					
+		function displayPublishPanel(XMLElement &$wrapper, $data = null, $flagWithError = null, $fieldnamePrefix = null, $fieldnamePostfix = null, $entry_id = null){					
 			
 			if ($this->get('show_in_publish') == 'no') return;
 			
@@ -144,7 +144,7 @@
 			
 		}
 		
-		public function prepareTableValue($data, XMLElement $link=NULL, $entry_id) {
+		public function prepareTableValue($data, XMLElement $link = null, $entry_id = null) {
 			
 			$version = EntryVersionsManager::getLatestVersion($entry_id);
 			
@@ -159,7 +159,7 @@
 			return sprintf('Version %d <span class="inactive">on %s by %s</span>', $meta->getAttribute('version'), $date, $author);
 		}
 		
-		public function appendFormattedElement(&$wrapper, $data, $encode=false, $mode=null) {
+		public function appendFormattedElement(XMLElement &$wrapper, $data, $encode = false, $mode = null, $entry_id = null) {
 			$entry_id = $wrapper->getAttribute('id');
 			
 			$versions = new XMLElement('versions');

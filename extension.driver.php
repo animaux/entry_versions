@@ -63,21 +63,29 @@
 			);
 		}
 		
-		public function initializeAdmin($context) {	
-			$page = $context['parent']->Page;
-			
-			$callback = Administration::instance()->getPageCallback();
-					
-			if ($page instanceof contentPublish and in_array($page->_context['page'], array('new', 'edit'))) {
+		public function initializeAdmin(array $context) {	
+
+			$c = Administration::instance()->getPageCallback();
+
+			if ($c['driver'] == 'publish' and in_array($c['context']['page'], array('new', 'edit'))) {
 				
-				$page->addElementToHead(new XMLElement(
+
+
+				/*$c->Page->addElementToHead(new XMLElement(
 					'script',
 					"Symphony.Context.add('entry_versions', " . json_encode(array('version' => $_GET['version'])) . ")",
 					array('type' => 'text/javascript')
-				), 9359350);
+				), 9359350);*/
+
+				$javaScript = "\n";
+				$javaScript.= "Symphony.Context.add('entry_versions', " . json_encode(array('version' => $_GET['version'])) . ")";
+			
+				$tag = new XMLElement('script', $javaScript, array('type'=>'text/javascript'));
+
+            	Administration::instance()->Page->addElementToHead($tag,9359350);
 				
-				$page->addStylesheetToHead(URL . '/extensions/entry_versions/assets/entry_versions.publish.css', 'screen', 9359351);
-				$page->addScriptToHead(URL . '/extensions/entry_versions/assets/entry_versions.publish.js', 9359352);
+				Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/entry_versions/assets/entry_versions.publish.css', 'screen', 9359351);
+				Administration::instance()->Page->addScriptToHead(URL . '/extensions/entry_versions/assets/entry_versions.publish.js', 9359352);
 			}
 			
 		}
@@ -93,7 +101,7 @@
 			// if saved from an event, no section is passed, so resolve
 			// section object from the entry
 			if(is_null($section)) {
-				$sm = new SectionManager(Symphony::Engine());
+				$sm = new SectionManager;
 				$section = $sm->fetch($entry->get('section_id'));
 			}
 			

@@ -10,7 +10,7 @@ Class EntryVersionsManager {
 		
 		// list existing versions of this entry
 		$existing_versions = General::listStructure(MANIFEST . '/versions/' . $entry->get('id') . '/', '/.xml$/');
-		
+		//var_dump($existing_versions);
 		// create folder
 		if (!file_exists(MANIFEST . '/versions/' . $entry->get('id'))) {
 			General::realiseDirectory(MANIFEST . '/versions/' . $entry->get('id'));
@@ -18,21 +18,34 @@ Class EntryVersionsManager {
 		
 		// max version number
 		$new_version_number = count($existing_versions['filelist']);
+
 		$new_version_number++;
-		
+
+		//$is_update = false;
+
 		if ($is_update) $new_version_number--;
 		
 		if ($new_version_number == 0) $new_version_number++;
 		
 		// run custom DS to get the built XML of this entry
-		$ds = new EntryVersionsXMLDataSource(Symphony::Engine(), null, false);
-		$ds->dsParamINCLUDEDELEMENTS = array_keys($fields);
-		$ds->dsParamFILTERS['id'] = $entry->get('id');
-		$ds->dsSource = (string)$entry->get('section_id');
+		//$ds = new EntryVersionsXMLDataSource(null, false);
+
+		require_once(TOOLKIT . '/data-sources/class.datasource.section.php');
+
+		$sectionDS = new SectionDatasource(array(), false);
+		$sectionDS->setSource((string)$entry->get('section_id'));
+		$sectionDS->dsParamINCLUDEDELEMENTS = array_keys($fields);
+		$sectionDS->dsParamFILTERS['id'] = $entry->get('id');
+		$sectionDS->dsParamROOTELEMENT = 'entries';
+		$sectionDS->dsParamORDER = 'desc';
+		$sectionDS->dsParamLIMIT = '1';
+		$sectionDS->dsParamREDIRECTONEMPTY = 'no';
+		$sectionDS->dsParamSORT = 'system:id';
+		$sectionDS->dsParamSTARTPAGE = '1';	
 		
 		$param_pool = array();
-		$entry_xml = $ds->grab($param_pool);
-
+		$entry_xml = $sectionDS->execute($param_pool);
+	
 		// get text value of the entry
 		$proc = new XsltProcess;
 		$data = $proc->process(
@@ -40,7 +53,7 @@ Class EntryVersionsManager {
 			file_get_contents(EXTENSIONS . '/entry_versions/lib/entry-version.xsl'),
 			array(
 				'version' => $new_version_number,
-				'created-by' => ((Symphony::Engine()->Author) ? Symphony::Engine()->Author->getFullName() : 'frontend user'),
+				'created-by' => ((Administration::instance()->Author()) ? Administration::instance()->Author()->getFullName() : 'frontend user'),
 				'created-date' => date('Y-m-d', time()),
 				'created-time' => date('H:i', time()),
 			)
@@ -68,7 +81,7 @@ Class EntryVersionsManager {
 		
 		foreach($files['filelist'] as $file) {
 			$entry = new DomDocument();
-			$entry->load(MANIFEST . '/versions/' . $entry_id . '/' . $file);
+			$entry->load($file);
 			$entries[] = $entry;			
 		}
 		
@@ -89,8 +102,8 @@ Class EntryVersionsManager {
 		$file = reset($files['filelist']);
 		
 		$entry = new DomDocument();
-		$entry->load(MANIFEST . '/versions/' . $entry_id . '/' . $file);
-		
+		$entry->load($file);
+
 		return $entry;
 		
 	}
@@ -127,44 +140,6 @@ Class EntryVersionsManager {
 		}
 		
 		return $new_entry;
-	}
-	
-}
-
-Class EntryVersionsXMLDataSource extends Datasource{
-	
-	public $dsParamROOTELEMENT = 'entries';
-	public $dsSource = null;
-	
-	public $dsParamORDER = 'desc';
-	public $dsParamLIMIT = '1';
-	public $dsParamREDIRECTONEMPTY = 'no';
-	public $dsParamSORT = 'system:id';
-	public $dsParamSTARTPAGE = '1';		
-	
-	public function __construct(&$parent, $env=NULL, $process_params=true){
-		parent::__construct($parent, $env, $process_params);
-	}
-	
-	public function getSource(){
-		return $this->dsSource;
-	}
-	
-	public function grab(&$param_pool){
-
-		$result = new XMLElement($this->dsParamROOTELEMENT);
-		
-		try{
-			include(TOOLKIT . '/data-sources/datasource.section.php');
-		}
-		catch(Exception $e){
-			$result->appendChild(new XMLElement('error', $e->getMessage()));
-			return $result;
-		}
-		if($this->_force_empty_result) $result = $this->emptyXMLSet();
-
-		return $result;		
-
 	}
 	
 }
