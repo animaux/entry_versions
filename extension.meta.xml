@@ -2,7 +2,7 @@
 <extension id="entry_versions" status="released" xmlns="http://symphony-cms.com/schemas/extension/1.0">
 	<name>Entry Versions</name>
 	<description>Super-easy version history of your entry content.</description>
-	<repo type="github">https://github.com/symphonists/entry_versions</repo>
+	<repo type="github">https://github.com/animaux/entry_versions</repo>
 	<url type="discuss">http://symphony-cms.com/discuss/thread/49295/</url>
 	<types>
 		<type>Field Types</type>
