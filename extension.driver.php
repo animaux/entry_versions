@@ -81,9 +81,9 @@
 		Just before saving a new entry, ...
 		*/
 		public function saveVersion(&$context) {
-			$section = $context['section'];
-			$entry = $context['entry'];
-			$fields = $context['fields'];
+			$section = $context['section'] ?? null;
+			$entry = $context['entry'] ?? null;
+			$fields = $context['fields'] ?? null;
 			
 			// if saved from an event, no section is passed, so resolve
 			// section object from the entry
@@ -115,7 +115,8 @@
 			if(!$has_entry_versions_field) return;
 			// $version = EntryVersionsManager::saveVersion($entry, $fields, $is_update, $entry_version_field_name);
 			$version = EntryVersionsManager::saveVersion($entry, $fields, $is_update);
-			$context['messages'][] = array('version', 'passed', $version);
+			// Index[3]-Error in Frontend, commented out …
+			//$context['messages'][] = array('version', 'passed', $version);
 			
 		}
 		

@@ -17,6 +17,9 @@
 		</author>
 	</authors>
 	<releases>
+	  <release version="0.8" date="2024-03-19" min="2.7.10">
+		  + Commented out line `$context['messages'][] = array('version', 'passed', $version);` in extension.driver.php to get rid of frontend update error.
+		</release>
 		<release version="0.7" date="2022-06-28" min="2.7.10">
 		  + PHP 8.1 Compatibility (likely requires PHP 7)
 		</release>

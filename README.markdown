@@ -8,3 +8,8 @@ Cache a version of an entry each time it is saved for a full edit history. Recov
 * extract the `entry_versions` folder to your `/extensions` directory
 * enable the Entry Versions row in the Extensions page
 * add the Entry Versions field to a section
+
+## Bump Version via frontend event
+
+		<!-- Bump Version -->
+		<input type="hidden" name="fields[entry-versions]" value="yes"/>
