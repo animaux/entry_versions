@@ -47,6 +47,7 @@
 					'delegate' => 'EventPostSaveFilter',
 					'callback' => 'saveVersion'
 				),
+
 			);
 		}
 		
@@ -115,7 +116,7 @@
 			if(!$has_entry_versions_field) return;
 			// $version = EntryVersionsManager::saveVersion($entry, $fields, $is_update, $entry_version_field_name);
 			$version = EntryVersionsManager::saveVersion($entry, $fields, $is_update);
-			// Index[3]-Error in Frontend, commented out …
+			// Index[3]-Error in Frontend, commented out … maybe this is inserted in the wrong part of the array?
 			//$context['messages'][] = array('version', 'passed', $version);
 			
 		}

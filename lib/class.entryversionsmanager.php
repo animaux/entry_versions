@@ -7,7 +7,7 @@ Class EntryVersionsManager {
 	
 	// saves an entry to disk
 	public static function saveVersion($entry, $fields, $is_update) {
-		
+				
 		// list existing versions of this entry
 		$existing_versions = General::listStructure(MANIFEST . '/versions/' . $entry->get('id') . '/', '/.xml$/');
 		//var_dump($existing_versions);
@@ -15,7 +15,7 @@ Class EntryVersionsManager {
 		if (!file_exists(MANIFEST . '/versions/' . $entry->get('id'))) {
 			General::realiseDirectory(MANIFEST . '/versions/' . $entry->get('id'));
 		}
-		
+				
 		// max version number
 		$existing_versions = $existing_versions ?? null;
 		$new_version_number = $new_version_number ?? null;
@@ -49,7 +49,13 @@ Class EntryVersionsManager {
 		
 		$param_pool = array();
 		$entry_xml = $sectionDS->execute($param_pool);
-	
+    
+    /* are we in front or in back? */	  
+		$author = 'frontend user';
+		if(Symphony::Engine() instanceOf Administration) {
+			$author = Administration::instance()->Author()->getFullName();
+		}
+	  
 		// get text value of the entry
 		$proc = new XsltProcess;
 		$data = $proc->process(
@@ -57,11 +63,13 @@ Class EntryVersionsManager {
 			file_get_contents(EXTENSIONS . '/entry_versions/lib/entry-version.xsl'),
 			array(
 				'version' => $new_version_number,
-				'created-by' => ((Administration::instance()->Author()) ? Administration::instance()->Author()->getFullName() : 'frontend user'),
+				'created-by' => $author,
 				'created-date' => date('Y-m-d', time()),
 				'created-time' => date('H:i', time()),
 			)
 		);
+		
+		/* var_dump(Symphony::Engine()); die(); */
 		
 		$write = General::writeFile(MANIFEST . '/versions/' . $entry->get('id') . '/' . $new_version_number . '.xml', $data);
 		// General::writeFile(MANIFEST . '/versions/' . $entry->get('id') . '/' . $new_version_number . '.dat', self::serializeEntry($entry));

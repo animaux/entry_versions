@@ -17,6 +17,9 @@
 		</author>
 	</authors>
 	<releases>
+	  <release version="0.9" date="2024-03-31" min="2.7.10">
+		  + Fix: Call of `Administration::instance()->Author()->getFullName()` when saving entries was switching `Symphony::Engine()` to `Administration`, which in turn lead to a clash with `email_template_manager` when saving entries with versions from the frontend and sending notification emails. 
+		</release>
 	  <release version="0.8" date="2024-03-19" min="2.7.10">
 		  + Commented out line `$context['messages'][] = array('version', 'passed', $version);` in extension.driver.php to get rid of frontend update error.
 		</release>

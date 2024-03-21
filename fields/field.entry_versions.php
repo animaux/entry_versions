@@ -119,7 +119,7 @@
 				
 				$dom_author = new XMLElement(
 					'span',
-					'by ' . $meta->getAttribute('created-by'),
+					$meta->getAttribute('created-by'),
 					array('class' => 'author')
 				);
 				
