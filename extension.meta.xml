@@ -3,7 +3,7 @@
 	<name>Entry Versions</name>
 	<description>Super-easy version history of your entry content.</description>
 	<repo type="github">https://github.com/animaux/entry_versions</repo>
-	<url type="discuss">http://symphony-cms.com/discuss/thread/49295/</url>
+	<url type="discuss">http://getsymphony.com/discuss/thread/49295/</url>
 	<types>
 		<type>Field Types</type>
 	</types>
